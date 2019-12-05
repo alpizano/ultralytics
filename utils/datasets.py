@@ -141,6 +141,11 @@ class LoadWebcam:  # for inference
         self.cap = cv2.VideoCapture(pipe)  # video capture object
         self.cap.set(cv2.CAP_PROP_BUFFERSIZE, 3)  # set buffer size
 
+        self.cap.set(cv2.CAP_PROP_EXPOSURE)
+        self.cap.set(cv2.CAP_PROP_CONTRAST)
+        self.cap.set(cv2.CAP_PROP_EXPOSURE)
+        self.cap.set(cv2.CAP_PROP_FPS, 260)
+
     def __iter__(self):
         self.count = -1
         return self
@@ -205,6 +210,7 @@ class LoadStreams:  # multiple IP or RTSP cameras
             w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
             h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
             fps = cap.get(cv2.CAP_PROP_FPS) % 100
+            print("Frames Per Second %i" % fps)
             print(' success (%gx%g at %.2f FPS).' % (w, h, fps))
             thread = Thread(target=self.update, args=([i, cap]), daemon=True)
             thread.start()
