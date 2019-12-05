@@ -226,7 +226,7 @@ def detect(cfg="cfg/yolo.cfg",
                         # final_tensor = state_tracker.calculateRealtime(frame_detections)
                     else:
                         cv2.putText(im0, "%s" % cv_at_rest, coords_at_rest_val, 0, 1, [51, 51, 255], thickness=2, lineType=cv2.LINE_AA)
-                    if output[0]['s'] > 1000 or started:
+                    if output[0]['s'] > opt.speed_thres or started:
                         started = True
                         if save_txt and init_pred:
                             init_pred_list = [splice_path[1],output[0]['s'],output[0]['a'],output[0]['theta'],output[0]['r'],output[1]['s'],output[1]['a'],output[1]['theta'],output[0]['r']]
@@ -333,9 +333,13 @@ if __name__ == '__main__':
     parser.add_argument('--save-img', action='store_true', help='saves images to output file')
     parser.add_argument('--stream-img', action='store_true', help='streams images as they go through detection')
     parser.add_argument('--predict', action='store_true', help='suggests half of wheel to bet on')
-    parser.add_argument('--speed-thres', action='store_true', help='set threshold for detecting beginning of spin')
+    parser.add_argument('--speed-thres', type=int, default=2000, help='set threshold for detecting beginning of spin')
     opt = parser.parse_args()
     print(opt)
+
+    opt.speed_thres == 50
+
+
 
     with torch.no_grad():
         detect(cfg=opt.cfg,
