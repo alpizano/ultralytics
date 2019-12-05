@@ -8,11 +8,12 @@ import statistics
 class StateVector:
 
     def __init__(self, x_center, y_center, DT):
+    #def __init__(self, DT):
         self.at_rest = False
         self.prev_ball = None
         self.prev_zero = None  # Predictive model network
-        self.x_center = x_center # center of wheel hardcoded?
-        self.y_center = y_center # center of wheel hardcoded?
+        self.x_center = x_center # center of wheel hardcoded
+        self.y_center = y_center # center of wheel hardcoded
         self.DT = DT
         self.b = 0 # ball detection count
         self.z = 0 # zero pocket detection count
@@ -21,6 +22,7 @@ class StateVector:
         self.pocket_count = 0
 
     def calculate_realtime(self, detections):
+    #def calculate_realtime(self,wheel_midpoint,detections):
         ball_flag = False
         zero_flag = False
         frame_state_vector = []
@@ -42,6 +44,7 @@ class StateVector:
             if self.prev_ball is not None and ball_flag:
                 # Convert cartesian coords to polar coords of ball
                 ball_object = StateVector.convert_to_polar(ball_object, self.x_center, self.y_center)
+                # ball_object = StateVector.convert_to_polar(ball_object, wheel_midpoint)
 
                 # Calculate angular velocity of ball DEGREES/SEC
                 ball_object['w'] = (StateVector.calculate_radial_distance(ball_object['theta'], self.prev_ball['theta']) / (self.DT*(self.i - self.b)))
@@ -64,11 +67,13 @@ class StateVector:
             # If there was NOT a previous ball and ball_flag = True
             elif self.prev_ball is None and ball_flag:
                 self.prev_ball = StateVector.convert_to_polar(ball_object, self.x_center, self.y_center)
+                # self.prev_ball = StateVector.convert_to_polar(ball_object, wheel_midpoint)
                 self.b = self.b + 1  # increment ball detection count
 
             #  CALCULATE ZERO SPEEDS AND ACCELERATIONS
             if self.prev_zero is not None and zero_flag:
                 zero_object = StateVector.convert_to_polar(zero_object, self.x_center, self.y_center)
+                # zero_object = StateVector.convert_to_polar(zero_object, wheel_midpoint)
                 zero_object['w'] = ((StateVector.calculate_radial_distance(zero_object['theta'], self.prev_zero['theta'])) / (self.DT*(self.i - self.z)))
                 zero_object['s'] = ((zero_object['x'] ** 2 + zero_object['y'] ** 2) ** (1 / 2)) * zero_object['w']
                 zero_object.pop('x')
@@ -85,6 +90,7 @@ class StateVector:
 
             elif self.prev_zero is None and zero_flag:
                 self.prev_zero = StateVector.convert_to_polar(zero_object, self.x_center, self.y_center)
+                # self.prev_zero = StateVector.convert_to_polar(zero_object, wheel_midpoint)
                 self.z = self.z + 1
         else:
             self.i = self.i + 1
@@ -103,9 +109,10 @@ class StateVector:
             if frame_state_vector[0]['s'] < 0:
                 frame_state_vector[0]['at_rest'] = True
 
-
+                # Should this be absolute value though?
                 pocket = abs(frame_state_vector[0]['theta'] - frame_state_vector[1]['theta'])
 
+                # Intialize array with elements analogous to pocket spacing on roulette wheel
                 theta_array = np.linspace(0,360,38)
 
                 for i in range(len(theta_array)):
