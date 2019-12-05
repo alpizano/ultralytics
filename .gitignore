@@ -21,7 +21,8 @@
 
 
 runs/*
-data/*
+data/images
+data/labels
 !labels
 !data/samples/zidane.jpg
 !data/samples/bus.jpg
