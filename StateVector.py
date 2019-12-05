@@ -139,7 +139,7 @@ class StateVector:
 
     @staticmethod
     def convert_to_polar(detection_object, x_center, y_center):
-
+    #def convert_to_polar(detection_object, wheel_midpoint):
         theta = 0
         #  Calculate midpoint
         #try:
@@ -148,6 +148,8 @@ class StateVector:
 
         x = detection_object['x'] - x_center # subtract "x": key pair in dict object from x_center
         y = detection_object['y'] - y_center # subtract "y": key pair in dict object from y_center
+        # x = detection_object['x'] - wheel_midpoint[0] # subtract "x": key pair in Tuple from x_center
+        #  y = detection_object['y'] - wheel_midpoint[1] # subtract "y": key pair in Tuple from y_center
 
         radius = (x ** 2 + y ** 2) ** (1 / 2) # calculate radius or distance between two points
 
@@ -253,82 +255,46 @@ class StateVector:
 
     @staticmethod
     def pick_pocket(index):
-        if index == 0:
-            return "0"
-        elif index == 1:
-            return "2"
-        elif index == 2:
-            return "14"
-        elif index == 3:
-            return "35"
-        elif index == 4:
-            return "23"
-        elif index == 5:
-            return "4"
-        elif index == 6:
-            return "16"
-        elif index == 7:
-            return "33"
-        elif index == 8:
-            return "21"
-        elif index == 9:
-            return "6"
-        elif index == 10:
-            return "18"
-        elif index == 11:
-            return "31"
-        elif index == 12:
-            return "19"
-        elif index == 13:
-            return "8"
-        elif index == 14:
-            return "12"
-        elif index == 15:
-            return "29"
-        elif index == 16:
-            return "25"
-        elif index == 17:
-            return "10"
-        elif index == 18:
-            return "27"
-        elif index == 19:
-            return "00"
-        elif index == 20:
-            return "1"
-        elif index == 21:
-            return "13"
-        elif index == 22:
-            return "36"
-        elif index == 23:
-            return "24"
-        elif index == 24:
-            return "3"
-        elif index == 25:
-            return "15"
-        elif index == 26:
-            return "34"
-        elif index == 27:
-            return "22"
-        elif index == 28:
-            return "5"
-        elif index == 29:
-            return "17"
-        elif index == 30:
-            return "32"
-        elif index == 31:
-            return "20"
-        elif index == 32:
-            return "7"
-        elif index == 33:
-            return "11"
-        elif index == 34:
-            return "30"
-        elif index == 35:
-            return "26"
-        elif index == 36:
-            return "9"
-        elif index == 37:
-            return "28"
+        switcher = {
+            0: "0",
+            1: "2",
+            2: "14",
+            3: "35",
+            4: "23",
+            5: "4",
+            6: "16",
+            7: "33",
+            8: "21",
+            9: "6",
+            10: "18",
+            11: "31",
+            12: "19",
+            13: "8",
+            14: "12",
+            15: "29",
+            16: "25",
+            17: "10",
+            18: "27",
+            19: "00",
+            20: "1",
+            21: "13",
+            22: "36",
+            23: "24",
+            24: "3",
+            25: "15",
+            26: "34",
+            27: "22",
+            28: "5",
+            29: "17",
+            30: "32",
+            31: "20",
+            32: "7",
+            33: "11",
+            34: "30",
+            35: "26",
+            36: "9",
+            37: "28"
+        }
 
     @staticmethod
     def most_freq_pocket(pocket_list):
