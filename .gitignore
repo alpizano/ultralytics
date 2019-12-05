@@ -16,7 +16,7 @@
 *.json
 *.txt
 
-*.cfg
+
 !cfg/yolov3*.cfg
 
 

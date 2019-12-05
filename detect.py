@@ -162,7 +162,7 @@ def detect(cfg="cfg/yolo.cfg",
 
                     # Don't append cls = 2 because no calculations performed on it
                     if object_detection['cls'] == 2:
-                        wheel_midpoint = (object_detection['x'],object_detection['y'])
+                        wheel_midpoint = (object_detection.get('x'),object_detection.get('y'))
                     else:
                         frame_detections.append(object_detection)
 
