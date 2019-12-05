@@ -39,6 +39,8 @@ def detect(cfg="cfg/yolo.cfg",
 
     # Instantiate StateVector Class
     state_memory = StateVector(x_center, y_center, DT)
+    # Adding support for non-hardcoded midpoint
+    #state_memory = StateVector(DT)
     pockets_list = ["0","2","14","35","23","4","16","33","21","6","18","31","19","8","12","29","25","10","27","00","1","13","36","24","3","15","34","22","5","17","32","20","7","11","30","26","9","28"]
 
     #final_tensor = None
@@ -159,8 +161,11 @@ def detect(cfg="cfg/yolo.cfg",
                     print("time.time() of obj detect: {}".format(time.time()))
 
                     # Don't append cls = 2 because no calculations performed on it
-                    if object_detection['cls'] != 2:
+                    if object_detection['cls'] == 2:
+                        wheel_midpoint = (object_detection['x'],object_detection['y'])
+                    else:
                         frame_detections.append(object_detection)
+
 
                     frame_detections.sort(key=operator.itemgetter("cls", "cnf"))
                     print("frames detection AFTER append: {}".format(frame_detections))
@@ -175,6 +180,7 @@ def detect(cfg="cfg/yolo.cfg",
 
                 # Calculate StateVector differentials then return JSON object
                 output = state_memory.calculate_realtime(frame_detections)
+                # output = state_memory.calculate_realtime(wheel_midpoint, frame_detections)
                 print("Output {}".format(output))
 
                 coords_speed = (0, 25)
@@ -327,6 +333,7 @@ if __name__ == '__main__':
     parser.add_argument('--save-img', action='store_true', help='saves images to output file')
     parser.add_argument('--stream-img', action='store_true', help='streams images as they go through detection')
     parser.add_argument('--predict', action='store_true', help='suggests half of wheel to bet on')
+    parser.add_argument('--speed-thres', action='store_true', help='set threshold for detecting beginning of spin')
     opt = parser.parse_args()
     print(opt)
 
