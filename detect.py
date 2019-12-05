@@ -215,17 +215,19 @@ def detect(cfg="cfg/yolo.cfg",
 
                     if output[0]['at_rest']:
                         #started = False
+                        guess = random.choice(pockets_list)
+                        print(guess)
                         pocket_list.append(output[0]['pocket_val'])
                         cv_pocket = output[0]['pocket_val']
-                        cv2.putText(im0, "%s" % cv_pocket, coords_actual_val, 0, 1, [51, 255, 51], thickness=2, lineType=cv2.LINE_AA)
-                        cv2.putText(im0, "%s" % cv_at_rest, coords_at_rest_val, 0, 1, [51, 255, 51], thickness=2, lineType=cv2.LINE_AA)
-                        if "17" == cv_pocket:
+                        cv2.putText(im0, "%s" % cv_pocket, coords_actual_val, 0, 0.5, [51, 255, 51], thickness=2, lineType=cv2.LINE_AA)
+                        cv2.putText(im0, "%s" % cv_at_rest, coords_at_rest_val, 0, 0.5, [51, 255, 51], thickness=2, lineType=cv2.LINE_AA)
+                        if guess == cv_pocket:
                             cv2.putText(im0, "17", coords_pred_val, 0, 1, [51, 255, 51], thickness=2, lineType=cv2.LINE_AA)
 
                         #if final_tensor is None:
                         # final_tensor = state_tracker.calculateRealtime(frame_detections)
                     else:
-                        cv2.putText(im0, "%s" % cv_at_rest, coords_at_rest_val, 0, 1, [51, 51, 255], thickness=2, lineType=cv2.LINE_AA)
+                        cv2.putText(im0, "%s" % cv_at_rest, coords_at_rest_val, 0, 0.5, [51, 51, 255], thickness=2, lineType=cv2.LINE_AA)
                     if output[0]['s'] > opt.speed_thres or started:
                         started = True
                         if save_txt and init_pred:
