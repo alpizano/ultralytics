@@ -5,9 +5,18 @@ from sklearn.metrics import explained_variance_score, \
     mean_absolute_error, \
     median_absolute_error
 from sklearn.model_selection import train_test_split
+from sklearn import preprocessing
+from sklearn.model_selection import train_test_split
 
-df = pd.DataFrame('pred_data.csv')
+# read in .csv
+df = pd.read_csv('pred_data.csv')
+print(df)
 
+# turn data frame into array
 dataset = df.values
 
-X = dataset[:,0:10]
+# first ten columns
+X = dataset[:,0:9]
+
+# pocket column
+Y = dataset[:,9]

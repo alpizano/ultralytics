@@ -189,6 +189,8 @@ class LoadStreams:  # multiple IP or RTSP cameras
     def __init__(self, path='streams.txt', img_size=416, half=False):
         self.img_size = img_size
         self.half = half  # half precision fp16 images
+
+
         with open(path, 'r') as f:
             sources = [x.strip() for x in f.read().splitlines() if len(x.strip())]
 

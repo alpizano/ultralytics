@@ -125,7 +125,6 @@ def detect(cfg="cfg/yolo.cfg",
             print(splice_path)
             s += '%gx%g ' % img.shape[2:]  # print string
 
-            # clear frames detection after object detection in frame
             #print("clear frame detections array")
             frame_detections = []
 
@@ -150,7 +149,7 @@ def detect(cfg="cfg/yolo.cfg",
                         "y": (int(xyxy[1])+int(xyxy[3]))/2,
                     }
                     #if p < 3:
-                        #print("frames detection BEFORE append: {}".format(frame_detections))
+                    print("frames detection BEFORE append: {}".format(frame_detections))
                         #frame_detections.sort(key=operator.itemgetter("cls", "cnf"))
                         #print("INNER loop detection: %i for cls: %i, conf: %.2f, x: %i, y: %i" % (p,int(cls),float(conf),(int(xyxy[0])+int(xyxy[2]))/2,(int(xyxy[1])+int(xyxy[3]))/2))
                     #else:
@@ -158,16 +157,20 @@ def detect(cfg="cfg/yolo.cfg",
                     print("t0 of obj detect: {}".format(t0))
                     print("t of obj detect: {}".format(t))
                     print("time.time() of obj detect: {}".format(time.time()))
-                    frame_detections.append(object_detection)
+
+                    # Don't append cls = 2 because no calculations performed on it
+                    if object_detection['cls'] != 2:
+                        frame_detections.append(object_detection)
+
                     frame_detections.sort(key=operator.itemgetter("cls", "cnf"))
-                    #print("frames detection AFTER append: {}".format(frame_detections))
+                    print("frames detection AFTER append: {}".format(frame_detections))
 
 
                     if save_img or stream_img:  # Add bbox to image
                         label = '%s %.2f' % (classes[int(cls)], conf)
                         plot_one_box(xyxy, im0, label=label, color=colors[int(cls)])
 
-                # Sort frame_detections array so cls 0 >> cls 1
+                # Sort frame_detections array so cls 0 >> cls 1 before passing to StateVector class
                 frame_detections.sort(key=operator.itemgetter("cls", "cnf"))
 
                 # Calculate StateVector differentials then return JSON object
@@ -270,10 +273,7 @@ def detect(cfg="cfg/yolo.cfg",
 
             # Stream results
             if stream_img:
-                try:
-                    cv2.imshow(str(p), im0)
-                except Exception as ex:
-                    print(ex)
+                cv2.imshow(p, im0)
 
 
             # Save results (image with detections)
