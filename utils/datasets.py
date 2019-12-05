@@ -138,13 +138,20 @@ class LoadWebcam:  # for inference
         # pipe = "rtspsrc location=rtsp://root:root@192.168.0.91:554/axis-media/media.amp?videocodec=h264&resolution=3840x2160 protocols=GST_RTSP_LOWER_TRANS_TCP ! rtph264depay ! queue ! vaapih264dec ! videoconvert ! appsink"  # GStreamer
 
         self.pipe = pipe
-        self.cap = cv2.VideoCapture(pipe)  # video capture object
+        self.cap = cv2.VideoCapture(pipe, cv2.CAP_DSHOW)  # video capture object
         self.cap.set(cv2.CAP_PROP_BUFFERSIZE, 3)  # set buffer size
 
-        self.cap.set(cv2.CAP_PROP_EXPOSURE)
-        self.cap.set(cv2.CAP_PROP_CONTRAST)
-        self.cap.set(cv2.CAP_PROP_EXPOSURE)
+        # Testing different settings for a dark environment. Boosting Exposure and Gamma helps dark
+        self.cap.set(cv2.CAP_PROP_EXPOSURE, 50)
+        # self.cap.set(cv2.CAP_PROP_CONTRAST)
+        self.cap.set(cv2.CAP_PROP_GAMMA, 50)
+
+        # Testing different FPS settings. Tried 120, tried 260, seems to force FPS
         self.cap.set(cv2.CAP_PROP_FPS, 260)
+
+        # After passing cv2.CAP_DSHOW to cv2.VideoCapture, manually set frame height/width
+        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT,360) #720
+        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH,640) #1280
 
     def __iter__(self):
         self.count = -1
